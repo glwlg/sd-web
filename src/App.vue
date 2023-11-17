@@ -2,8 +2,10 @@
 </script>
 
 <template>
-    <router-link to="/"><n-button>首页</n-button></router-link>
-    <router-link to="/img2img"><n-button>图片转换</n-button></router-link>
-    <router-view></router-view>
+  <router-link to="/">
+    <n-button v-if="$route.path !== '/'">返回首页</n-button>
+  </router-link>
+  <n-divider />
+  <router-view></router-view>
 </template>
 

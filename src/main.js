@@ -12,7 +12,10 @@ import {
     NGridItem,
     NCard,
     NSpin,
+    NSpace,
+    NDivider,
     NButton,
+    NInput,
     NUpload
 } from 'naive-ui'
 import router from './router.js'
@@ -30,7 +33,10 @@ const naive = create({
         NGridItem,
         NCard,
         NSpin,
+        NSpace,
+        NDivider,
         NButton,
+        NInput,
         NUpload]
 })
 
