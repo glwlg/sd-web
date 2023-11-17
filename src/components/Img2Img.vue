@@ -41,7 +41,7 @@ export default {
     const img2img = () => {
       axios.post('/sd/sdapi/v1/img2img', {
         "prompt": "masterpiece, best quality, glasses,looking away,  (wide-eyed:1.2),1boy,realistic, 3d,",
-        "negative_prompt": "(cross-eyed:1.5),EasyNegative, drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry, blush, red_face",
+        "negative_prompt": "(NSFW:2),(sexy:2),(cross-eyed:1.5),EasyNegative, drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry, blush, red_face",
         // "styles": [
         //     "string"
         // ],
@@ -50,7 +50,7 @@ export default {
         ],
         "steps": 30,
         "cfg_scale": 10,
-        "seed": 3756927964,
+        "seed": -1,
         "refiner_checkpoint": "realcartoon3d_v30.safetensors",
         "width": 512,
         "height": 704,
