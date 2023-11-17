@@ -1,5 +1,5 @@
-const fs = require('fs');
-const dotenv = require('dotenv');
+import fs from 'fs';
+import dotenv from 'dotenv'
 
 // 读取环境变量
 dotenv.config();
