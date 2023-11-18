@@ -27,7 +27,7 @@
 <script>
 import {ref} from 'vue'
 import axios from "axios";
-
+import imageCompression from 'browser-image-compression';
 export default {
   setup() {
     const fileInput = ref(null)
@@ -111,16 +111,30 @@ export default {
             console.log(error);
           });
     }
-    const onFileChange = (event) => {
+    const onFileChange = async (event) => {
       const file = event.target.files[0]
       if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          originalImage.value = e.target.result
-          loading.value = true;
-          img2img();
+        const options = {
+          maxSizeMB: 1,          // (default: Number.POSITIVE_INFINITY)
+          maxWidthOrHeight: 1024,  // (default: undefined)
+          useWebWorker: true,      // (default: true)
+          maxIteration: 10,       // (default: 10)
+          exifOrientation: true,  // (default: false)
+          onProgress: undefined, // (default: null) hook function to log progress
+          initialQuality: 0.8    // (default: 0.92)
         }
-        reader.readAsDataURL(file)
+        try {
+          const compressedFile = await imageCompression(file, options);
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            originalImage.value = e.target.result
+            loading.value = true;
+            img2img();
+          }
+          reader.readAsDataURL(compressedFile)
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
 
