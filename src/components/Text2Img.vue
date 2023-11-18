@@ -97,6 +97,7 @@ export default defineComponent({
           });
     }
     const onGenerateClick = () => {
+      resultImage.value = null;
       loading.value = true;
       txt2img();
     }
@@ -132,13 +133,4 @@ export default defineComponent({
   object-fit: contain;
 }
 
-
-.placeholder {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  color: #ccc;
-  border: 1px dashed #ccc;
-}
 </style>

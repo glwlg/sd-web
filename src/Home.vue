@@ -2,13 +2,26 @@
 </script>
 
 <template>
-  <router-link to="/img2img">
-    <n-button>AI照片</n-button>
-  </router-link>
-  <n-divider />
-  <router-link to="/text2img">
-    <n-button>AI文字生成照片</n-button>
-  </router-link>
+  <div class="container">
+
+    <n-space vertical>
+      <n-card>
+        <div class="placeholder">
+          <router-link to="/img2img">
+            <p style="font-size: 6vh;">AI照片</p>
+
+          </router-link>
+        </div>
+      </n-card>
+      <n-card>
+        <div class="placeholder">
+          <router-link to="/text2img">
+            <p style="font-size: 5vh;">AI文字生成照片</p>
+          </router-link>
+        </div>
+      </n-card>
+    </n-space>
+  </div>
 </template>
 
 <style scoped>

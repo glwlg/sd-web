@@ -7,16 +7,17 @@
         </div>
         <div v-else class="placeholder">
           <n-spin v-if="loading" size="large"/>
-          <n-button v-else @click="onUploadClick">点击上传图片</n-button>
+          <n-button v-else @click="onUploadClick">点击上传照片</n-button>
         </div>
       </n-card>
       <n-button v-if="resultImage" @click="onContinueClick">继续美化</n-button>
+      <n-button v-if="resultImage" @click="onUploadClick">换张照片</n-button>
       <n-card>
         <div v-if="originalImage" class="image-container">
           <img :src="originalImage" alt="Original"/>
         </div>
         <div v-else class="placeholder">
-          <span>请先上传图片</span>
+          <span>请先上传照片</span>
         </div>
       </n-card>
     </n-space>
@@ -112,6 +113,7 @@ export default {
       if (file) {
         const reader = new FileReader()
         reader.onload = (e) => {
+          resultImage.value = null;
           originalImage.value = e.target.result
           loading.value = true;
           img2img();
@@ -142,28 +144,6 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  max-width: 512px;
-  margin: 0 auto;
-}
-
-.image-container {
-  position: relative;
-  width: 100%;
-}
-
-.image-container img {
-  width: 100%;
-  object-fit: contain;
-}
 
 
-.placeholder {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  color: #ccc;
-  border: 1px dashed #ccc;
-}
 </style>

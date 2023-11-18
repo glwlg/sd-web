@@ -87,3 +87,28 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.container {
+  max-width: 512px;
+  margin: 0 auto;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+}
+
+.image-container img {
+  width: 100%;
+  object-fit: contain;
+}
+
+
+.placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #ccc;
+  border: 1px dashed #ccc;
+}
