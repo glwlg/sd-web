@@ -8,7 +8,7 @@
       <n-card>
         <div class="placeholder">
           <router-link to="/img2img">
-            <p style="font-size: 6vh;">AI照片</p>
+            <p style="font-size: 4vh;">AI照片</p>
 
           </router-link>
         </div>
@@ -16,7 +16,7 @@
       <n-card>
         <div class="placeholder">
           <router-link to="/text2img">
-            <p style="font-size: 5vh;">AI文字生成照片</p>
+            <p style="font-size: 3.5vh;">AI文字生成照片</p>
           </router-link>
         </div>
       </n-card>
