@@ -50,7 +50,7 @@ export default {
           originalImage.value
         ],
         "steps": 30,
-        "cfg_scale": 10,
+        "cfg_scale": 5,
         "seed": -1,
         "refiner_checkpoint": "realcartoon3d_v30.safetensors",
         "width": 512,
@@ -60,7 +60,7 @@ export default {
         "subseed_strength": 0,
         "seed_resize_from_h": -1,
         "seed_resize_from_w": -1,
-        "sampler_name": "DPM++ 2S a",
+        "sampler_name": "Euler a",
         "batch_size": 1,
         "n_iter": 1,
         "restore_faces": true,
