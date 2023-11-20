@@ -16,6 +16,7 @@ import {
     NDivider,
     NButton,
     NInput,
+    NModal,
     NUpload
 } from 'naive-ui'
 import router from './router.js'
@@ -37,6 +38,7 @@ const naive = create({
         NDivider,
         NButton,
         NInput,
+        NModal,
         NUpload]
 })
 

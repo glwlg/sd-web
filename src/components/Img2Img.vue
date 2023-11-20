@@ -1,6 +1,10 @@
 <template>
   <div class="container">
     <n-space vertical>
+      <n-space>
+        <n-button v-if="resultImage" @click="onContinueClick">继续美化</n-button>
+        <n-button v-if="resultImage" @click="onUploadClick">换张照片</n-button>
+      </n-space>
       <n-card>
         <div v-if="resultImage" class="image-container">
           <img :src="resultImage" alt="Result"/>
@@ -10,8 +14,6 @@
           <n-button v-else @click="onUploadClick">点击上传照片</n-button>
         </div>
       </n-card>
-      <n-button v-if="resultImage" @click="onContinueClick">继续美化</n-button>
-      <n-button v-if="resultImage" @click="onUploadClick">换张照片</n-button>
       <n-card>
         <div v-if="originalImage" class="image-container">
           <img :src="originalImage" alt="Original"/>
@@ -22,18 +24,56 @@
       </n-card>
     </n-space>
     <input type="file" ref="fileInput" @change="onFileChange" style="display: none" accept="image/png, image/jpeg"/>
+    <n-modal v-model:show="showStyleModel"
+             :mask-closable="false"
+             role="card"
+             style="padding: 0"
+    >
+      <n-card
+          style="width: 300px"
+          :bordered="false"
+          size="huge"
+          aria-modal="true"
+      >
+        <n-space justify="space-between">
+          <div class="svgBox" style="background-color: #6c8be5" @click="img2img('3dboy')">
+            <svg style="width: 40px;color: #ffffff;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                 viewBox="0 0 1024 1024">
+              <path
+                  d="M874 120H622c-3.3 0-6 2.7-6 6v56c0 3.3 2.7 6 6 6h160.4L583.1 387.3c-50-38.5-111-59.3-175.1-59.3c-76.9 0-149.3 30-203.6 84.4S120 539.1 120 616s30 149.3 84.4 203.6C258.7 874 331.1 904 408 904s149.3-30 203.6-84.4C666 765.3 696 692.9 696 616c0-64.1-20.8-124.9-59.2-174.9L836 241.9V402c0 3.3 2.7 6 6 6h56c3.3 0 6-2.7 6-6V150c0-16.5-13.5-30-30-30zM408 828c-116.9 0-212-95.1-212-212s95.1-212 212-212s212 95.1 212 212s-95.1 212-212 212z"
+                  fill="currentColor"></path>
+            </svg>
+          </div>
+          <div class="svgBox"
+               style="background-color: #ffa8a8"
+               @click="img2img('3dboy')">
+            <svg style="width: 40px;color: #ffffff;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                 viewBox="0 0 1024 1024">
+              <path
+                  d="M712.8 548.8c53.6-53.6 83.2-125 83.2-200.8c0-75.9-29.5-147.2-83.2-200.8C659.2 93.6 587.8 64 512 64s-147.2 29.5-200.8 83.2C257.6 200.9 228 272.1 228 348c0 63.8 20.9 124.4 59.4 173.9c7.3 9.4 15.2 18.3 23.7 26.9c8.5 8.5 17.5 16.4 26.8 23.7c39.6 30.8 86.3 50.4 136.1 57V736H360c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h114v140c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V812h114c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8H550V629.5c61.5-8.2 118.2-36.1 162.8-80.7zM512 556c-55.6 0-107.7-21.6-147.1-60.9C325.6 455.8 304 403.6 304 348s21.6-107.7 60.9-147.1C404.2 161.5 456.4 140 512 140s107.7 21.6 147.1 60.9C698.4 240.2 720 292.4 720 348s-21.6 107.7-60.9 147.1C619.7 534.4 567.6 556 512 556z"
+                  fill="currentColor"></path>
+            </svg>
+          </div>
+          <!--          <n-button @click="img2img('3dboy')">帅哥</n-button>-->
+          <!--          <n-button @click="img2img('3dgirl')">美女</n-button>-->
+        </n-space>
+      </n-card>
+    </n-modal>
   </div>
 </template>
 <script>
-import {ref} from 'vue'
+import {defineComponent, ref} from 'vue'
 import axios from "axios";
 import imageCompression from 'browser-image-compression';
-export default {
+
+export default defineComponent({
   setup() {
     const fileInput = ref(null)
     const originalImage = ref(null)
     const resultImage = ref(null)
     const loading = ref(false)
+    const showStyleModel = ref(false)
+    const style = ref(null)
 
     const onUploadClick = () => {
       resultImage.value = null;
@@ -42,13 +82,16 @@ export default {
       fileInput.value.click()
     }
 
-    const img2img = () => {
+    const img2img = (chooseStyle) => {
+      style.value = chooseStyle;
+      loading.value = true;
+      showStyleModel.value = false;
       axios.post('/sd/sdapi/v1/img2img', {
-        "prompt": "masterpiece, best quality,realistic, 3d,attractive",
-        "negative_prompt": "(cross-eyed:1.5),EasyNegative,wrinkled skin,  drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry, blush, red_face",
-        // "styles": [
-        //     "string"
-        // ],
+        // "prompt": "masterpiece, best quality,realistic, 3d,solo,1boy",
+        // "negative_prompt": "(cross-eyed:1.5),EasyNegative,wrinkled skin,  drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry, blush, red_face",
+        "styles": [
+          style.value
+        ],
         "init_images": [
           originalImage.value
         ],
@@ -59,7 +102,7 @@ export default {
         "refiner_switch_at": 0.8,
         "width": 512,
         "height": 704,
-        "denoising_strength": 0.35,
+        "denoising_strength": 0.2,
         "image_cfg_scale": 1.5,
         "sampler_name": "DPM++ 2M Karras",
         "include_init_images": false,
@@ -128,8 +171,7 @@ export default {
           const reader = new FileReader()
           reader.onload = (e) => {
             originalImage.value = e.target.result
-            loading.value = true;
-            img2img();
+            showStyleModel.value = true;
           }
           reader.readAsDataURL(compressedFile)
         } catch (error) {
@@ -140,10 +182,9 @@ export default {
 
     const onContinueClick = () => {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
-      loading.value = true;
       originalImage.value = resultImage.value;
       resultImage.value = null;
-      img2img();
+      img2img(style.value);
     }
 
     return {
@@ -151,15 +192,21 @@ export default {
       originalImage,
       resultImage,
       loading,
+      showStyleModel,
       onUploadClick,
       onContinueClick,
-      onFileChange
+      onFileChange,
+      img2img
     }
   }
-}
+});
 </script>
 
 <style scoped>
-
-
+.svgBox {
+  display: grid;
+  place-items: center;
+  width: 80px;
+  height: 80px;
+}
 </style>
