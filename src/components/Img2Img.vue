@@ -102,7 +102,7 @@ export default defineComponent({
         "refiner_switch_at": 0.8,
         "width": 512,
         "height": 704,
-        "denoising_strength": 0.2,
+        "denoising_strength": 0.25,
         "image_cfg_scale": 1.5,
         "sampler_name": "DPM++ 2M Karras",
         "include_init_images": false,
