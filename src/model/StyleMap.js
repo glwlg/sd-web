@@ -3,12 +3,12 @@ const commonNegativePrompt = "NSFW,(cross-eyed:1.5),EasyNegative, drawn by bad-a
 
 const Style = Object.freeze({
     BeautyGirl: {
-        prompt: commonPrompt + "1girl,White and tender skin, baby fat face with a pair of big watery eyes",
+        prompt: commonPrompt + "1girl,White and tender skin",
         negative_prompt: commonNegativePrompt,
         refiner_checkpoint: "botRealisicSoeasy_v10"
     },
     BeautyBoy: {
-        prompt: commonPrompt + "1boy,White and tender skin, baby fat face with a pair of big watery eyes",
+        prompt: commonPrompt + "1boy,White and tender skin",
         negative_prompt: commonNegativePrompt,
         refiner_checkpoint: "botRealisicSoeasy_v10"
     },
