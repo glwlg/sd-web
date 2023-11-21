@@ -1,14 +1,19 @@
 <template>
   <div class="container">
     <n-space vertical>
+      <n-space>
+        <n-button :focusable="false" @click="chooseStyle('Beauty')" :color="style==='Beauty'?'#fd7171':''">美颜</n-button>
+        <n-button :focusable="false" @click="chooseStyle('Comic')" :color="style==='Comic'?'#fd7171':''">漫画</n-button>
+        <n-button :focusable="false" @click="chooseStyle('Q')" :color="style==='Q'?'#fd7171':''">Q 版</n-button>
+      </n-space>
       <n-space vertical>
         <n-tooltip trigger="hover">
           <template #trigger>
-            <div style="color: black;font-size: 15px;">调整幅度: {{denoisingStrength}}%</div>
+            <div style="color: black;font-size: 15px;">调整幅度: {{ denoisingStrength }}%</div>
           </template>
           幅度越小越像照片本人
         </n-tooltip>
-        <n-slider v-model:value="denoisingStrength" :step="1"/>
+        <n-slider v-model:value="denoisingStrength" :step="1" :min="minDenoisingStrength"/>
       </n-space>
 
       <n-space>
@@ -34,7 +39,7 @@
       </n-card>
     </n-space>
     <input type="file" ref="fileInput" @change="onFileChange" style="display: none" accept="image/png, image/jpeg"/>
-    <n-modal v-model:show="showStyleModel"
+    <n-modal v-model:show="showSexModel"
              :mask-closable="false"
              role="card"
              style="padding: 0"
@@ -46,7 +51,7 @@
           aria-modal="true"
       >
         <n-space justify="space-between">
-          <div class="svgBox" style="background-color: #6c8be5" @click="img2img('3dboy2')">
+          <div class="svgBox" style="background-color: #6c8be5" @click="img2img('Boy')">
             <svg style="width: 40px;color: #ffffff;" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink"
                  viewBox="0 0 1024 1024">
@@ -57,7 +62,7 @@
           </div>
           <div class="svgBox"
                style="background-color: #ffa8a8"
-               @click="img2img('3dgirl2')">
+               @click="img2img('Girl')">
             <svg style="width: 40px;color: #ffffff;" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink"
                  viewBox="0 0 1024 1024">
@@ -76,6 +81,7 @@ import {defineComponent, ref} from 'vue'
 import axios from "axios";
 import imageCompression from 'browser-image-compression';
 import Img2imgConfig from '../model/Img2imgConfig';
+import Style from '../model/StyleMap.js';
 
 export default defineComponent({
       setup() {
@@ -83,20 +89,34 @@ export default defineComponent({
         const originalImage = ref(null)
         const resultImage = ref(null)
         const loading = ref(false)
-        const showStyleModel = ref(false)
-        const style = ref(null)
+        const showSexModel = ref(false)
+        const style = ref('Beauty')
         const width = ref(512)
         const height = ref(704)
         const denoisingStrength = ref(30)
+        const minDenoisingStrength = ref(10)
 
-        const img2img = (chooseStyle) => {
+        const chooseStyle = (chooseStyle) => {
           style.value = chooseStyle;
+          if (chooseStyle === 'Q') {
+            denoisingStrength.value = 50;
+            minDenoisingStrength.value = 50;
+          }else if (chooseStyle === 'Comic') {
+            denoisingStrength.value = 40;
+            minDenoisingStrength.value = 40;
+          } else{
+            denoisingStrength.value = 30;
+            minDenoisingStrength.value = 10;
+          }
+        }
+        const img2img = (chooseSex) => {
           loading.value = true;
-          showStyleModel.value = false;
-          var imgConfig = new Img2imgConfig(style.value, originalImage.value);
+          showSexModel.value = false;
+          let styleName = style.value + chooseSex;
+          let imgConfig = new Img2imgConfig(Style[styleName], originalImage.value);
           imgConfig.width = width.value
           imgConfig.height = height.value
-          imgConfig.denoising_strength = denoisingStrength.value/100
+          imgConfig.denoising_strength = denoisingStrength.value / 100
           axios.post('/sd/sdapi/v1/img2img', imgConfig)
               .then(function (response) {
                 resultImage.value = 'data:image/png;base64,' + response.data.images[0];
@@ -139,7 +159,7 @@ export default defineComponent({
                     height.value = width.value / this.width * this.height;
                   }
                   originalImage.value = e.target.result;
-                  showStyleModel.value = true;
+                  showSexModel.value = true;
                 }
                 img.src = e.target.result;
               }
@@ -162,11 +182,14 @@ export default defineComponent({
           originalImage,
           resultImage,
           loading,
-          showStyleModel,
+          style,
+          showSexModel,
           denoisingStrength,
+          minDenoisingStrength,
           onUploadClick,
           onContinueClick,
           onFileChange,
+          chooseStyle,
           img2img
         }
       }

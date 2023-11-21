@@ -2,12 +2,14 @@ import ControlNet from './ControlNet.js';
 
 export default class Img2imgConfig {
     constructor(style, originalImage) {
-        this.styles = [style];
+        this.prompt = style.prompt;
+        this.negative_prompt = style.negative_prompt;
+        this.styles = [];
         this.init_images = [originalImage];
         this.steps = 30;
         this.cfg_scale = 10;
         this.seed = -1;
-        this.refiner_checkpoint = "";
+        this.refiner_checkpoint = style.refiner_checkpoint;
         this.refiner_switch_at = "0";
         this.width = 512;
         this.height = 704;
