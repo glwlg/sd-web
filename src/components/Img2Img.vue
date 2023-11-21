@@ -1,6 +1,16 @@
 <template>
   <div class="container">
     <n-space vertical>
+      <n-space vertical>
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <div style="color: black;font-size: 15px;">调整幅度: {{denoisingStrength}}%</div>
+          </template>
+          幅度越小越像照片本人
+        </n-tooltip>
+        <n-slider v-model:value="denoisingStrength" :step="1"/>
+      </n-space>
+
       <n-space>
         <n-button v-if="resultImage" @click="onContinueClick">继续美化</n-button>
         <n-button v-if="resultImage" @click="onUploadClick">换张照片</n-button>
@@ -77,6 +87,7 @@ export default defineComponent({
         const style = ref(null)
         const width = ref(512)
         const height = ref(704)
+        const denoisingStrength = ref(30)
 
         const img2img = (chooseStyle) => {
           style.value = chooseStyle;
@@ -85,6 +96,7 @@ export default defineComponent({
           var imgConfig = new Img2imgConfig(style.value, originalImage.value);
           imgConfig.width = width.value
           imgConfig.height = height.value
+          imgConfig.denoising_strength = denoisingStrength.value/100
           axios.post('/sd/sdapi/v1/img2img', imgConfig)
               .then(function (response) {
                 resultImage.value = 'data:image/png;base64,' + response.data.images[0];
@@ -151,6 +163,7 @@ export default defineComponent({
           resultImage,
           loading,
           showStyleModel,
+          denoisingStrength,
           onUploadClick,
           onContinueClick,
           onFileChange,
