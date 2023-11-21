@@ -2,7 +2,8 @@
   <div class="container">
     <n-space vertical>
       <n-space>
-        <n-button :focusable="false" @click="chooseStyle('Beauty')" :color="style==='Beauty'?'#fd7171':''">美颜</n-button>
+        <n-button :focusable="false" @click="chooseStyle('Beauty')" :color="style==='Beauty'?'#fd7171':''">美颜
+        </n-button>
         <n-button :focusable="false" @click="chooseStyle('Comic')" :color="style==='Comic'?'#fd7171':''">漫画</n-button>
         <n-button :focusable="false" @click="chooseStyle('Q')" :color="style==='Q'?'#fd7171':''">Q 版</n-button>
       </n-space>
@@ -13,10 +14,11 @@
           </template>
           幅度越小越像照片本人
         </n-tooltip>
-        <n-slider v-model:value="denoisingStrength" :step="1" :min="minDenoisingStrength"/>
+        <n-slider v-model:value="denoisingStrength" :step="1" :min="minDenoisingStrength" :max="60"/>
       </n-space>
 
       <n-space>
+        <n-button v-if="resultImage" @click="img2img">重新生成</n-button>
         <n-button v-if="resultImage" @click="onContinueClick">继续美化</n-button>
         <n-button v-if="resultImage" @click="onUploadClick">换张照片</n-button>
       </n-space>
@@ -51,7 +53,7 @@
           aria-modal="true"
       >
         <n-space justify="space-between">
-          <div class="svgBox" style="background-color: #6c8be5" @click="img2img('Boy')">
+          <div class="svgBox" style="background-color: #6c8be5" @click="chooseSex('Boy')">
             <svg style="width: 40px;color: #ffffff;" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink"
                  viewBox="0 0 1024 1024">
@@ -62,7 +64,7 @@
           </div>
           <div class="svgBox"
                style="background-color: #ffa8a8"
-               @click="img2img('Girl')">
+               @click="chooseSex('Girl')">
             <svg style="width: 40px;color: #ffffff;" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink"
                  viewBox="0 0 1024 1024">
@@ -95,24 +97,30 @@ export default defineComponent({
         const height = ref(704)
         const denoisingStrength = ref(30)
         const minDenoisingStrength = ref(10)
+        const sex = ref(null)
 
         const chooseStyle = (chooseStyle) => {
           style.value = chooseStyle;
           if (chooseStyle === 'Q') {
             denoisingStrength.value = 50;
             minDenoisingStrength.value = 50;
-          }else if (chooseStyle === 'Comic') {
+          } else if (chooseStyle === 'Comic') {
             denoisingStrength.value = 40;
             minDenoisingStrength.value = 40;
-          } else{
+          } else {
             denoisingStrength.value = 30;
             minDenoisingStrength.value = 10;
           }
         }
-        const img2img = (chooseSex) => {
+        const chooseSex = (chooseSex) => {
+          sex.value = chooseSex;
+          img2img();
+        }
+        const img2img = () => {
+          resultImage.value = null;
           loading.value = true;
           showSexModel.value = false;
-          let styleName = style.value + chooseSex;
+          let styleName = style.value + sex.value;
           let imgConfig = new Img2imgConfig(Style[styleName], originalImage.value);
           imgConfig.width = width.value
           imgConfig.height = height.value
@@ -190,6 +198,7 @@ export default defineComponent({
           onContinueClick,
           onFileChange,
           chooseStyle,
+          chooseSex,
           img2img
         }
       }
