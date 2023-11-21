@@ -13,23 +13,23 @@ export default class Img2imgConfig {
         this.refiner_switch_at = "0";
         this.width = 512;
         this.height = 704;
-        this.denoising_strength = 0.3,
-            this.clip_skip = 2,
-            this.image_cfg_scale = 0,
-            this.sampler_name = "DPM++ 2M SDE Heun Karras",
-            this.include_init_images = true,
-            this.send_images = true,
-            this.save_images = false,
-            this.do_not_save_samples = true,
-            this.do_not_save_grid = true,
-            this.disable_extra_networks = true,
-            this.resize_mode = 1,
-            this.alwayson_scripts = {
-                controlnet: {
-                    args: [
-                        new ControlNet()
-                    ]
-                }
-            };
+        this.denoising_strength = 0.3;
+        this.clip_skip = 2;
+        this.image_cfg_scale = 0;
+        this.sampler_name = "DPM++ 2M SDE Heun Karras";
+        this.include_init_images = true;
+        this.send_images = true;
+        this.save_images = false;
+        this.do_not_save_samples = true;
+        this.do_not_save_grid = true;
+        this.disable_extra_networks = true;
+        this.resize_mode = 1;
+        this.alwayson_scripts = {
+            controlnet: {
+                args: [
+                    new ControlNet()
+                ]
+            }
+        };
     }
 }

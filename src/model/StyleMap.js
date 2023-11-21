@@ -13,12 +13,12 @@ const Style = Object.freeze({
         refiner_checkpoint: "botRealisicSoeasy_v10"
     },
     QGirl: {
-        prompt: commonPrompt + "chibi, 1girl,White and tender skin, baby fat face with a pair of big watery eyes, delicate like a porcelain doll",
+        prompt: commonPrompt + "1girl,chibi,child, Colorful personality,delicate like a porcelain doll",
         negative_prompt: commonNegativePrompt,
         refiner_checkpoint: "helloq3Q_helloq3V10c"
     },
     QBoy: {
-        prompt: commonPrompt + "chibi, 1boy,White and tender skin, baby fat face with a pair of big watery eyes, delicate like a porcelain doll",
+        prompt: commonPrompt + "1boy,chibi,child, Colorful personality,delicate like a porcelain doll",
         negative_prompt: commonNegativePrompt,
         refiner_checkpoint: "helloq3Q_helloq3V10c"
     },
