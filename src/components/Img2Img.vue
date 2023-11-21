@@ -19,7 +19,7 @@
 
       <n-space>
         <n-button v-if="resultImage" @click="img2img">重新生成</n-button>
-        <n-button v-if="resultImage" @click="onContinueClick">继续美化</n-button>
+<!--        <n-button v-if="resultImage" @click="onContinueClick">继续美化</n-button>-->
         <n-button v-if="resultImage" @click="onUploadClick">换张照片</n-button>
       </n-space>
       <n-card>
