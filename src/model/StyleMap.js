@@ -5,32 +5,32 @@ const Style = Object.freeze({
     BeautyGirl: {
         prompt: commonPrompt + "1girl,White and tender skin",
         negative_prompt: commonNegativePrompt,
-        refiner_checkpoint: "botRealisicSoeasy_v10"
+        sd_model_checkpoint: "botRealisicSoeasy_v10"
     },
     BeautyBoy: {
         prompt: commonPrompt + "1boy,White and tender skin",
         negative_prompt: commonNegativePrompt,
-        refiner_checkpoint: "botRealisicSoeasy_v10"
+        sd_model_checkpoint: "botRealisicSoeasy_v10"
     },
     QGirl: {
         prompt: commonPrompt + "1girl,chibi,child, Colorful personality,delicate like a porcelain doll",
         negative_prompt: commonNegativePrompt,
-        refiner_checkpoint: "helloq3Q_helloq3V10c"
+        sd_model_checkpoint: "helloq3Q_helloq3V10c"
     },
     QBoy: {
         prompt: commonPrompt + "1boy,chibi,child, Colorful personality,delicate like a porcelain doll",
         negative_prompt: commonNegativePrompt,
-        refiner_checkpoint: "helloq3Q_helloq3V10c"
+        sd_model_checkpoint: "helloq3Q_helloq3V10c"
     },
     ComicGirl: {
         prompt: commonPrompt + "chibi, 1girl,White and tender skin, Anime style",
         negative_prompt: commonNegativePrompt,
-        refiner_checkpoint: "mixProV4_v4"
+        sd_model_checkpoint: "mixProV4_v4"
     },
     ComicBoy: {
         prompt: commonPrompt + "chibi, 1boy,White and tender skin, Anime style",
         negative_prompt: commonNegativePrompt,
-        refiner_checkpoint: "mixProV4_v4"
+        sd_model_checkpoint: "mixProV4_v4"
     }
 });
 
