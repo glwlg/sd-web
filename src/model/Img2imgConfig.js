@@ -9,11 +9,11 @@ export default class Img2imgConfig {
         this.steps = 30;
         this.cfg_scale = 10;
         this.seed = -1;
-        this.override_settings={
-            sd_model_checkpoint : style.sd_model_checkpoint
-        },
-        // this.refiner_checkpoint = style.refiner_checkpoint;
-        // this.refiner_switch_at = "0";
+        this.override_settings = {
+            sd_model_checkpoint: style.sd_model_checkpoint
+        };
+        this.refiner_checkpoint = "";
+        this.refiner_switch_at = "-1";
         this.width = 512;
         this.height = 704;
         this.denoising_strength = 0.3;
