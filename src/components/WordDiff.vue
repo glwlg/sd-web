@@ -21,6 +21,7 @@
       <n-card v-if="result">
         <div class="result">
           <span
+              style="white-space: pre;"
               v-for="(item, index) in result"
               :key="index"
               :style="getStyle(item[0])">
