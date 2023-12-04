@@ -2,15 +2,15 @@
   <div class="container">
     <n-space vertical>
       <n-space>
-        <n-button :focusable="false" @click="chooseStyle('Beauty')" :color="style==='Beauty'?'#fd7171':''">美颜
-        </n-button>
-        <n-button :focusable="false" @click="chooseStyle('Comic')" :color="style==='Comic'?'#fd7171':''">漫画</n-button>
         <n-button :focusable="false" @click="chooseStyle('Q')" :color="style==='Q'?'#fd7171':''">Q 版</n-button>
+        <n-button :focusable="false" @click="chooseStyle('Comic')" :color="style==='Comic'?'#fd7171':''">漫画</n-button>
+        <n-button :focusable="false" @click="chooseStyle('Beauty')" :color="style==='Beauty'?'#fd7171':''">换脸
+        </n-button>
       </n-space>
       <n-space vertical>
         <n-tooltip trigger="hover">
           <template #trigger>
-            <div style="color: black;font-size: 15px;">调整幅度: {{ denoisingStrength }}%</div>
+            <div style="color: #ffffff;font-size: 15px;">调整幅度: {{ denoisingStrength }}%</div>
           </template>
           幅度越小越像照片本人
         </n-tooltip>
@@ -18,27 +18,43 @@
       </n-space>
 
       <n-space>
-        <n-button v-if="resultImage" @click="img2img">重新生成</n-button>
-<!--        <n-button v-if="resultImage" @click="onContinueClick">继续美化</n-button>-->
-        <n-button v-if="resultImage" @click="onUploadClick">换张照片</n-button>
+        <n-button :disabled="!resultImage" @click="reImg">重新生成</n-button>
+        <!--        <n-button v-if="resultImage" @click="onContinueClick">继续美化</n-button>-->
+        <n-button :disabled="!resultImage" @click="onUploadClick">换张照片</n-button>
       </n-space>
-      <n-card>
-        <div v-if="resultImage" class="image-container">
-          <img :src="resultImage" alt="Result"/>
-        </div>
-        <div v-else class="placeholder">
-          <n-spin v-if="loading" size="large"/>
-          <n-button v-else @click="onUploadClick">点击上传照片</n-button>
-        </div>
-      </n-card>
-      <n-card>
-        <div v-if="originalImage" class="image-container">
-          <img :src="originalImage" alt="Original"/>
-        </div>
-        <div v-else class="placeholder">
-          <span>请先上传照片</span>
-        </div>
-      </n-card>
+
+      <div :class="{ loader: true, loadAnimate: loading,loadFinish:resultImage }">
+          <n-card>
+            <div v-if="originalImage" class="image-container">
+              <!--          <img :src="resultImage" alt="Result"/>-->
+              <transition name="fade" mode="out-in">
+                <img v-if="resultImage" :src="resultImage" alt="Result"/>
+                <img v-else :src="originalImage" alt="Original"/>
+              </transition>
+            </div>
+            <div v-else class="placeholder">
+              <n-spin v-if="loading" size="large"/>
+              <n-button v-else @click="onUploadClick">点击上传照片</n-button>
+            </div>
+          </n-card>
+      </div>
+      <!--      <n-card>-->
+      <!--        <div v-if="resultImage" class="image-container">-->
+      <!--          <img :src="resultImage" alt="Result"/>-->
+      <!--        </div>-->
+      <!--        <div v-else class="placeholder">-->
+      <!--          <n-spin v-if="loading" size="large"/>-->
+      <!--          <n-button v-else @click="onUploadClick">点击上传照片</n-button>-->
+      <!--        </div>-->
+      <!--      </n-card>-->
+      <!--      <n-card>-->
+      <!--        <div v-if="originalImage" class="image-container">-->
+      <!--          <img :src="originalImage" alt="Original"/>-->
+      <!--        </div>-->
+      <!--        <div v-else class="placeholder">-->
+      <!--          <span>请先上传照片</span>-->
+      <!--        </div>-->
+      <!--      </n-card>-->
     </n-space>
     <input type="file" ref="fileInput" @change="onFileChange" style="display: none" accept="image/png, image/jpeg"/>
     <n-modal v-model:show="showSexModel"
@@ -79,7 +95,7 @@
   </div>
 </template>
 <script>
-import {defineComponent, ref} from 'vue'
+import {defineComponent, nextTick, reactive, ref, watch} from 'vue'
 import axios from "axios";
 import imageCompression from 'browser-image-compression';
 import Img2imgConfig from '../model/Img2imgConfig';
@@ -92,18 +108,18 @@ export default defineComponent({
         const resultImage = ref(null)
         const loading = ref(false)
         const showSexModel = ref(false)
-        const style = ref('Beauty')
+        const style = ref('Q')
         const width = ref(512)
         const height = ref(704)
-        const denoisingStrength = ref(30)
-        const minDenoisingStrength = ref(10)
+        const denoisingStrength = ref(50)
+        const minDenoisingStrength = ref(40)
         const sex = ref(null)
 
         const chooseStyle = (chooseStyle) => {
           style.value = chooseStyle;
           if (chooseStyle === 'Q') {
             denoisingStrength.value = 50;
-            minDenoisingStrength.value = 50;
+            minDenoisingStrength.value = 40;
           } else if (chooseStyle === 'Comic') {
             denoisingStrength.value = 40;
             minDenoisingStrength.value = 40;
@@ -117,7 +133,7 @@ export default defineComponent({
           img2img();
         }
         const img2img = () => {
-          resultImage.value = null;
+          // resultImage.value = null;
           loading.value = true;
           showSexModel.value = false;
           let styleName = style.value + sex.value;
@@ -133,6 +149,13 @@ export default defineComponent({
               .catch(function (error) {
                 console.log(error);
               });
+        }
+
+        const reImg = async () => {
+          resultImage.value = null;
+          await nextTick(() => {
+            img2img();
+          });
         }
 
         const onUploadClick = () => {
@@ -185,6 +208,7 @@ export default defineComponent({
           img2img(style.value);
         }
 
+
         return {
           fileInput,
           originalImage,
@@ -199,7 +223,8 @@ export default defineComponent({
           onFileChange,
           chooseStyle,
           chooseSex,
-          img2img
+          img2img,
+          reImg
         }
       }
     }
@@ -207,11 +232,56 @@ export default defineComponent({
 ;
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .svgBox {
   display: grid;
   place-items: center;
   width: 80px;
   height: 80px;
 }
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+
+.loader {
+  position: relative;
+  margin: auto;
+  line-height: 100px;
+  text-align: center;
+  overflow: hidden;
+  padding: 4px;
+}
+
+.loadAnimate::before {
+  transform: rotateZ(0deg) translate(0%, -0%) !important;
+  transition: transform 15s;
+}
+
+.loadFinish::before {
+  position: absolute;
+  transform: rotateZ(-90deg) translate(-100%, -100%) !important;
+  transition: transform 0s !important;
+}
+
+.loader::before { //稍大的元素进行位移旋转
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #ba0000;
+  transform: rotateZ(-90deg) translate(-100%, -100%);
+  transform-origin: top left;
+  transition-timing-function: linear;
+}
+
 </style>

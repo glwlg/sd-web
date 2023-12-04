@@ -1,9 +1,11 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import {
     // create naive ui
     create,
     // component
+    NConfigProvider,
     NLayout,
+    NText,
     NLayoutHeader,
     NLayoutSider,
     NLayoutFooter,
@@ -18,8 +20,16 @@ import {
     NInput,
     NModal,
     NInputNumber,
+    NSelect,
+    NDialog,
     NSlider,
     NTooltip,
+    NCheckbox,
+    NForm,
+    NFormItem,
+    NMessageProvider,
+    NPageHeader,
+    NAvatar,
     NUpload
 } from 'naive-ui'
 import router from './router.js'
@@ -28,7 +38,9 @@ import App from './App.vue'
 
 const naive = create({
     components: [
+        NConfigProvider,
         NLayout,
+        NText,
         NLayoutHeader,
         NLayoutSider,
         NLayoutFooter,
@@ -43,8 +55,16 @@ const naive = create({
         NInput,
         NModal,
         NInputNumber,
+        NSelect,
+        NDialog,
         NSlider,
         NTooltip,
+        NCheckbox,
+        NForm,
+        NFormItem,
+        NMessageProvider,
+        NPageHeader,
+        NAvatar,
         NUpload]
 })
 
