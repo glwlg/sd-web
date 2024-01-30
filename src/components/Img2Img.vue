@@ -6,6 +6,8 @@
         <n-button :focusable="false" @click="chooseStyle('Comic')" :color="style==='Comic'?'#fd7171':''">漫画</n-button>
         <n-button :focusable="false" @click="chooseStyle('Beauty')" :color="style==='Beauty'?'#fd7171':''">换脸
         </n-button>
+<!--        <n-button :focusable="false" @click="chooseStyle('plus')" :color="style==='plus'?'#fd7171':''">扩图-->
+<!--        </n-button>-->
       </n-space>
       <n-space vertical>
         <n-tooltip trigger="hover">
@@ -105,6 +107,7 @@ export default defineComponent({
       setup() {
         const fileInput = ref(null)
         const originalImage = ref(null)
+        const maskImage = ref(null)
         const resultImage = ref(null)
         const loading = ref(false)
         const showSexModel = ref(false)
@@ -123,6 +126,9 @@ export default defineComponent({
           } else if (chooseStyle === 'Comic') {
             denoisingStrength.value = 40;
             minDenoisingStrength.value = 40;
+          } else if (chooseStyle === 'plus') {
+            denoisingStrength.value = 50;
+            minDenoisingStrength.value = 50;
           } else {
             denoisingStrength.value = 30;
             minDenoisingStrength.value = 10;
@@ -137,7 +143,9 @@ export default defineComponent({
           loading.value = true;
           showSexModel.value = false;
           let styleName = style.value + sex.value;
-          let imgConfig = new Img2imgConfig(Style[styleName], originalImage.value);
+
+          let imgConfig = new Img2imgConfig(Style[styleName], originalImage.value, maskImage.value);
+
           imgConfig.width = width.value
           imgConfig.height = height.value
           imgConfig.denoising_strength = denoisingStrength.value / 100
@@ -191,6 +199,48 @@ export default defineComponent({
                   }
                   originalImage.value = e.target.result;
                   showSexModel.value = true;
+
+                  if (style.value === 'plus') {
+                    // 创建新的canvas元素
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+
+                    // 设置canvas的宽高为原图的2倍
+                    canvas.width = img.width * 2;
+                    canvas.height = img.height * 2;
+
+                    // 设置画布的背景色为白色
+                    context.fillStyle = '#FFFFFF';
+
+                    // 填充整个画布
+                    context.fillRect(0, 0, canvas.width, canvas.height);
+
+                    // 将原图画在画布的中间
+                    context.drawImage(img, img.width / 2, img.height / 2);
+
+                    originalImage.value = canvas.toDataURL('image/png');
+
+
+
+                    // 设置透明矩形的位置和大小
+                    const rectX = img.width / 2;
+                    const rectY = img.height / 2;
+                    const rectWidth = img.width;
+                    const rectHeight = img.height;
+
+                    // 在画布上绘制一个透明的矩形
+                    context.clearRect(rectX, rectY, rectWidth, rectHeight);
+
+                    // 将canvas转换为图片
+                    const newImg = document.createElement('img');
+                    newImg.src = canvas.toDataURL('image/png');
+
+
+                    maskImage.value = canvas.toDataURL('image/png');
+
+                    // 将新的图片添加到页面中
+                    // document.body.appendChild(newImg);
+                  }
                 }
                 img.src = e.target.result;
               }

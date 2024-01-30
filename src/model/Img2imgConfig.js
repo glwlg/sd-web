@@ -1,7 +1,8 @@
 import ControlNet from './ControlNet.js';
+import Style from "./StyleMap.js";
 
 export default class Img2imgConfig {
-    constructor(style, originalImage) {
+    constructor(style, originalImage, maskImage) {
         this.prompt = style.prompt;
         this.negative_prompt = style.negative_prompt;
         this.styles = [];
@@ -9,11 +10,9 @@ export default class Img2imgConfig {
         this.steps = 30;
         this.cfg_scale = 10;
         this.seed = -1;
-        this.override_settings = {
-            sd_model_checkpoint: style.sd_model_checkpoint
-        };
-        this.refiner_checkpoint = "";
-        this.refiner_switch_at = "-1";
+        this.override_settings = style.override_settings;
+        this.refiner_checkpoint = style.refiner_checkpoint;
+        this.refiner_switch_at = style.refiner_switch_at;
         this.width = 512;
         this.height = 704;
         this.denoising_strength = 0.3;
@@ -26,13 +25,27 @@ export default class Img2imgConfig {
         this.do_not_save_samples = true;
         this.do_not_save_grid = true;
         this.disable_extra_networks = true;
-        this.resize_mode = 1;
-        this.alwayson_scripts = {
-            controlnet: {
-                args: [
-                    new ControlNet()
-                ]
-            }
-        };
+        this.alwayson_scripts = style.alwayson_scripts;
+        this.mask = maskImage;
+        this.mask_blur_x = style.mask_blur_x;
+        this.mask_blur_y = style.mask_blur_y;
+        this.mask_blur = style.mask_blur;
+        this.inpainting_fill = style.inpainting_fill;
+        this.inpaint_full_res = style.inpaint_full_res;
+        this.inpaint_full_res_padding = style.inpaint_full_res_padding;
+        this.inpainting_mask_invert = style.inpainting_mask_invert;
     }
+
+    plusGirl(maskImage){
+        this.mask = maskImage;
+        this.mask_blur_x = 0;
+        this.mask_blur_y = 0;
+        this.mask_blur = 10;
+        this.inpainting_fill = 0;
+        this.inpaint_full_res = style.inpaint_full_res;
+        this.inpaint_full_res_padding = style.inpaint_full_res_padding;
+        this.inpainting_mask_invert = style.inpainting_mask_invert;
+        return this;
+    }
+
 }
